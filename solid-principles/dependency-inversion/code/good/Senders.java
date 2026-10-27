@@ -1,13 +1,16 @@
 package solid.dip.good;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
  * Low-level details. Each one implements the abstraction.
  * Adding a new channel means adding a new class here, nothing else changes.
  */
-public class Senders {
+public final class Senders {
+
+    private Senders() { }   // holder class: not meant to be instantiated
 
     public static class EmailSender implements MessageSender {
         @Override
@@ -25,7 +28,9 @@ public class Senders {
 
     /** Test double: records messages instead of sending them. */
     public static class FakeSender implements MessageSender {
-        public final List<String> sent = new ArrayList<>();
+        private final List<String> sent = new ArrayList<>();
+
+        public List<String> getSent() { return Collections.unmodifiableList(sent); }
 
         @Override
         public void send(String to, String message) {

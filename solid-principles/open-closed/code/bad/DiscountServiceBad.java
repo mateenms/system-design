@@ -1,12 +1,12 @@
 package solid.ocp.bad;
 
 /**
- * ❌ BAD EXAMPLE — Open/Closed Principle Violation
+ * [BAD] BAD EXAMPLE - Open/Closed Principle Violation
  *
  * Problem:
  *   Every time we add a new discount type (e.g., SEASONAL, LOYALTY, FLASH_SALE),
  *   we MUST edit this method. That means:
- *     - Touching working, tested code → risk of regression
+ *     - Touching working, tested code -> risk of regression
  *     - The class is NOT closed for modification
  *     - The switch/if-else block grows indefinitely
  *
@@ -19,7 +19,7 @@ public class DiscountServiceBad {
     /**
      * Applies a discount based on a string type.
      *
-     * ❌ Every new discount type requires editing THIS method.
+     * [BAD] Every new discount type requires editing THIS method.
      *    This violates OCP because the class is NOT closed for modification.
      *
      * @param price        original price
@@ -41,21 +41,21 @@ public class DiscountServiceBad {
             return price / 2;
 
         }
-        // ❌ To add SEASONAL discount, a developer must come here and add another else-if.
+        // [BAD] To add SEASONAL discount, a developer must come here and add another else-if.
         // That risks breaking the existing three types during editing.
 
-        // No matching discount — return original price
+        // No matching discount - return original price
         return price;
     }
 
-    // ────────────────────────────────────────────────
+    // ------------------------------------------------
     // Demo
-    // ────────────────────────────────────────────────
+    // ------------------------------------------------
     public static void main(String[] args) {
         DiscountServiceBad service = new DiscountServiceBad();
 
-        System.out.println("PERCENTAGE_10 on $100 → $" + service.applyDiscount(100, "PERCENTAGE_10"));
-        System.out.println("FIXED_20      on $100 → $" + service.applyDiscount(100, "FIXED_20"));
-        System.out.println("BOGO          on $100 → $" + service.applyDiscount(100, "BUY_ONE_GET_ONE"));
+        System.out.println("PERCENTAGE_10 on $100 -> $" + service.applyDiscount(100, "PERCENTAGE_10"));
+        System.out.println("FIXED_20      on $100 -> $" + service.applyDiscount(100, "FIXED_20"));
+        System.out.println("BOGO          on $100 -> $" + service.applyDiscount(100, "BUY_ONE_GET_ONE"));
     }
 }

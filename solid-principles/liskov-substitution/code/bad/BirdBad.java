@@ -1,7 +1,7 @@
 package solid.lsp.bad;
 
 /**
- * ❌ BAD EXAMPLE — Liskov Substitution Principle Violation
+ * [BAD] BAD EXAMPLE - Liskov Substitution Principle Violation
  *
  * Problem:
  *   Bird declares fly(). Ostrich extends Bird but CANNOT fly.
@@ -17,7 +17,7 @@ package solid.lsp.bad;
  *   makeBirdFly(new Ostrich()) is called.
  */
 
-// Base class — assumes ALL birds can fly
+// Base class - assumes ALL birds can fly
 class Bird {
 
     protected String name;
@@ -37,7 +37,7 @@ class Bird {
     public String getName() { return name; }
 }
 
-// ✅ Works fine — Eagles can fly
+// [OK] Works fine - Eagles can fly
 class Eagle extends Bird {
 
     public Eagle() {
@@ -50,7 +50,7 @@ class Eagle extends Bird {
     }
 }
 
-// ❌ LSP Violation — Ostriches cannot fly!
+// [BAD] LSP Violation - Ostriches cannot fly!
 class Ostrich extends Bird {
 
     public Ostrich() {
@@ -59,8 +59,8 @@ class Ostrich extends Bird {
 
     @Override
     public void fly() {
-        // ❌ Forced to override, but cannot honour the contract
-        // Caller expects fly() to work — gets a crash instead
+        // [BAD] Forced to override, but cannot honour the contract
+        // Caller expects fly() to work - gets a crash instead
         throw new UnsupportedOperationException("Ostrich cannot fly!");
     }
 }
@@ -74,13 +74,13 @@ public class BirdBad {
      */
     public static void makeBirdFly(Bird bird) {
         System.out.println("Making " + bird.getName() + " fly...");
-        bird.fly(); // ❌ Crashes with UnsupportedOperationException for Ostrich
+        bird.fly(); // [BAD] Crashes with UnsupportedOperationException for Ostrich
     }
 
     public static void main(String[] args) {
-        makeBirdFly(new Eagle());  // ✅ Works fine
+        makeBirdFly(new Eagle());  // [OK] Works fine
 
-        // ❌ Crashes at runtime — LSP violation
+        // [BAD] Crashes at runtime - LSP violation
         makeBirdFly(new Ostrich());
     }
 }

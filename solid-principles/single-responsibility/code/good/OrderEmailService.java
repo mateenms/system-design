@@ -1,13 +1,13 @@
 package solid.srp.good;
 
 /**
- * ✅ GOOD EXAMPLE — Responsibility 3: Email Notification
+ * [OK] GOOD EXAMPLE - Responsibility 3: Email Notification
  *
  * Single Responsibility:
  *   This class ONLY sends order-related emails.
  *   It changes ONLY when the email template or SMTP config changes.
  *
- * Who owns this class? → Comms / Marketing team.
+ * Who owns this class? -> Comms / Marketing team.
  */
 public class OrderEmailService {
 
@@ -22,10 +22,10 @@ public class OrderEmailService {
      * @param orderTotal  the final calculated total (injected, not recalculated here)
      */
     public void sendConfirmation(Order order, double orderTotal) {
-        String subject = "Order Confirmed — #" + order.getId();
+        String subject = "Order Confirmed - #" + order.getId();
         String body    = "Hi " + order.getCustomerName() + ",\n"
                        + "Your order has been placed successfully.\n"
-                       + "Total: $" + String.format("%.2f", orderTotal) + "\n"
+                       + "Total: $" + String.format(java.util.Locale.ROOT, "%.2f", orderTotal) + "\n"
                        + "Thank you for shopping with us!";
 
         // Simulating SMTP send

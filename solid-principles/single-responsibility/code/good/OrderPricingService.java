@@ -1,21 +1,23 @@
 package solid.srp.good;
 
 /**
- * ✅ GOOD EXAMPLE — Responsibility 1: Pricing / Business Logic
+ * [OK] GOOD EXAMPLE - Responsibility 1: Pricing / Business Logic
  *
  * Single Responsibility:
  *   This class ONLY calculates prices and applies tax rules.
  *   It changes ONLY when Finance team updates pricing or tax logic.
  *
- * Who owns this class? → Finance / Business team.
+ * Who owns this class? -> Finance / Business team.
  */
 public class OrderPricingService {
 
-    // Tax rate — in a real app this would come from configuration
+    // Teaching note: double keeps the example simple. Use BigDecimal for real money.
+
+    // Tax rate - in a real app this would come from configuration
     private static final double TAX_RATE = 0.10;
 
     /**
-     * Calculates the order subtotal (sum of price × quantity for all items).
+     * Calculates the order subtotal (sum of price x quantity for all items).
      *
      * @param order the order to calculate for
      * @return subtotal before tax

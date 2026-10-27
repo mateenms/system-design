@@ -1,7 +1,7 @@
 package solid.lsp.good;
 
 /**
- * ✅ Base interface — every bird shares these capabilities.
+ * [OK] Base interface - every bird shares these capabilities.
  *
  * Design decision:
  *   fly() is NOT here because not all birds can fly.

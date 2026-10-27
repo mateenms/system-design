@@ -6,6 +6,6 @@ A collection of software design concepts, patterns, and principles with practica
 
 | Topic | Description |
 |-------|-------------|
-| [solid-principles/](solid-principles/) | The five SOLID principles of OOP with bad/good Python examples |
+| [solid-principles/](solid-principles/) | The five SOLID principles of OOP with bad/good Java examples, theory, interview Q&A |
 
 More topics coming soon.

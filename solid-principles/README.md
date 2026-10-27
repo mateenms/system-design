@@ -507,6 +507,29 @@ Covers: Basic · Intermediate (per principle) · Advanced · Real-World Spring B
 
 ---
 
+## Runnable Code Examples
+
+Each principle folder has `code/bad/` (the violation) and `code/good/` (the fix), all plain Java 17+ with no build tool:
+
+| Principle | Good example entry point |
+|-----------|--------------------------|
+| SRP | `single-responsibility/code/good/OrderWorkflow.java` |
+| OCP | `open-closed/code/good/DiscountService.java` |
+| LSP | `liskov-substitution/code/good/BirdDemo.java` |
+| ISP | `interface-segregation/code/good/Devices.java` |
+| DIP | `dependency-inversion/code/good/NotificationService.java` |
+
+Compile and run from the `solid-principles/` folder (SRP shown; change the folder and class for the others):
+
+```bash
+javac -d out single-responsibility/code/good/*.java
+java -cp out solid.srp.good.OrderWorkflow
+```
+
+Package names: `solid.<srp|ocp|lsp|isp|dip>.<bad|good>`. The bad versions have a `main` too, so you can run them and see the problem.
+
+---
+
 ## Quick Cheat Sheet
 
 ```

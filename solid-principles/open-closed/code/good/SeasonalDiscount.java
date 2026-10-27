@@ -1,13 +1,13 @@
 package solid.ocp.good;
 
 /**
- * ✅ NEW discount type added WITHOUT touching any existing code.
+ * [OK] NEW discount type added WITHOUT touching any existing code.
  *
  * This is OCP in action:
  *   - We extended the system with a new discount.
- *   - DiscountService, PercentageDiscount, FixedDiscount — all untouched.
+ *   - DiscountService, PercentageDiscount, FixedDiscount - all untouched.
  *
- * Example: Seasonal sale gives 25% off → $100 becomes $75
+ * Example: Seasonal sale gives 25% off -> $100 becomes $75
  */
 public class SeasonalDiscount implements DiscountStrategy {
 

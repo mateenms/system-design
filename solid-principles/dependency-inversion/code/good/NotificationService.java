@@ -31,6 +31,6 @@ public class NotificationService {
         // Test wiring: no real email/SMS needed
         Senders.FakeSender fake = new Senders.FakeSender();
         new NotificationService(fake).notifyUser("test-user", "hello");
-        System.out.println("Fake captured: " + fake.sent);
+        System.out.println("Fake captured: " + fake.getSent());
     }
 }

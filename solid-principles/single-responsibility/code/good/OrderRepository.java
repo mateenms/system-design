@@ -1,13 +1,15 @@
 package solid.srp.good;
 
+import java.util.Optional;
+
 /**
- * ✅ GOOD EXAMPLE — Responsibility 2: Database Access
+ * [OK] GOOD EXAMPLE - Responsibility 2: Database Access
  *
  * Single Responsibility:
  *   This class ONLY reads and writes orders to/from the database.
  *   It changes ONLY when the DB schema or persistence technology changes.
  *
- * Who owns this class? → Backend / DBA team.
+ * Who owns this class? -> Backend / DBA team.
  */
 public class OrderRepository {
 
@@ -30,11 +32,11 @@ public class OrderRepository {
      * Retrieves an order by its ID.
      *
      * @param orderId the ID to look up
-     * @return the found order, or null if not found
+     * @return the found order, or empty if not found
      */
-    public Order findById(int orderId) {
+    public Optional<Order> findById(int orderId) {
         // Simulating a DB read
         System.out.println("[DB] Fetching order #" + orderId);
-        return null; // placeholder — real code would query the DB
+        return Optional.empty(); // placeholder - real code would query the DB
     }
 }

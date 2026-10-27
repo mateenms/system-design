@@ -1,11 +1,11 @@
 package solid.lsp.good;
 
 /**
- * ✅ Extended interface — only birds that CAN fly implement this.
+ * [OK] Extended interface - only birds that CAN fly implement this.
  *
  * Key LSP principle:
  *   A method accepting FlyingBird can ALWAYS call fly() safely.
- *   No UnsupportedOperationException possible — the type system enforces it.
+ *   No UnsupportedOperationException possible - the type system enforces it.
  */
 public interface FlyingBird extends Bird {
 

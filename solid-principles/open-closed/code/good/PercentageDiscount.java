@@ -3,13 +3,16 @@ package solid.ocp.good;
 /**
  * Concrete discount: reduces the price by a given percentage.
  *
- * Example: 10% discount on $100 → $90
+ * Example: 10% discount on $100 -> $90
  */
 public class PercentageDiscount implements DiscountStrategy {
 
     private final double percent; // e.g. 10.0 means 10%
 
     public PercentageDiscount(double percent) {
+        if (percent < 0 || percent > 100) {
+            throw new IllegalArgumentException("percent must be between 0 and 100: " + percent);
+        }
         this.percent = percent;
     }
 

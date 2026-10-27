@@ -3,7 +3,7 @@ package solid.ocp.good;
 /**
  * Concrete discount: subtracts a fixed dollar amount from the price.
  *
- * Example: $20 off $100 → $80
+ * Example: $20 off $100 -> $80
  * Price never goes below $0.
  */
 public class FixedDiscount implements DiscountStrategy {
@@ -11,6 +11,9 @@ public class FixedDiscount implements DiscountStrategy {
     private final double discountAmount; // e.g. 20.0 means $20 off
 
     public FixedDiscount(double discountAmount) {
+        if (discountAmount < 0) {
+            throw new IllegalArgumentException("discountAmount must be >= 0: " + discountAmount);
+        }
         this.discountAmount = discountAmount;
     }
 

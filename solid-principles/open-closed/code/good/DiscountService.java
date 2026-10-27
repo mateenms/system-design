@@ -1,11 +1,13 @@
 package solid.ocp.good;
 
+import java.util.Objects;
+
 /**
- * ✅ GOOD EXAMPLE — Open/Closed Principle
+ * [OK] GOOD EXAMPLE - Open/Closed Principle
  *
  * This class is:
- *   ✅ CLOSED for modification — the applyDiscount() method NEVER changes.
- *   ✅ OPEN for extension    — new discount types are new classes, not if-else branches.
+ *   [OK] CLOSED for modification - the applyDiscount() method NEVER changes.
+ *   [OK] OPEN for extension    - new discount types are new classes, not if-else branches.
  *
  * Key design decision:
  *   - DiscountService depends on the DiscountStrategy INTERFACE, not any concrete class.
@@ -25,29 +27,30 @@ public class DiscountService {
      * @return the discounted price
      */
     public double applyDiscount(double originalPrice, DiscountStrategy strategy) {
+        Objects.requireNonNull(strategy, "strategy");
         double discountedPrice = strategy.apply(originalPrice);
 
         // Log what happened (useful for receipts)
-        System.out.printf("Applied %-30s | $%.2f → $%.2f%n",
+        System.out.printf("Applied %-30s | $%.2f -> $%.2f%n",
                 strategy.getName(), originalPrice, discountedPrice);
 
         return discountedPrice;
     }
 
-    // ────────────────────────────────────────────────
-    // Demo — run this to see all discount types working
-    // ────────────────────────────────────────────────
+    // ------------------------------------------------
+    // Demo - run this to see all discount types working
+    // ------------------------------------------------
     public static void main(String[] args) {
         DiscountService service = new DiscountService();
         double originalPrice   = 100.0;
 
         System.out.println("=== Discount Examples ===");
 
-        // Existing discount types — no changes needed
+        // Existing discount types - no changes needed
         service.applyDiscount(originalPrice, new PercentageDiscount(10));
         service.applyDiscount(originalPrice, new FixedDiscount(20));
 
-        // New discount type — just pass a new strategy, nothing else changes
+        // New discount type - just pass a new strategy, nothing else changes
         service.applyDiscount(originalPrice, new SeasonalDiscount());
 
         /*
