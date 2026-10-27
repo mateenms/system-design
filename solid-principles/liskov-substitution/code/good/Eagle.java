@@ -2,6 +2,8 @@ package solid.lsp.good;
 
 /**
  * Eagle CAN fly, so it implements FlyingBird.
+ *
+ * @author Mateen
  */
 public class Eagle implements FlyingBird {
 

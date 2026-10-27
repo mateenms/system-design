@@ -13,6 +13,8 @@ package solid.ocp.bad;
  * Real pain point:
  *   Adding a 5th discount type breaks the existing 4 if you make a mistake.
  *   All discount types are coupled in one fragile block.
+ *
+ * @author Mateen
  */
 public class DiscountServiceBad {
 

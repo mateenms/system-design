@@ -6,6 +6,8 @@ package solid.dip.good;
  * NotificationService (high-level) depends only on the MessageSender
  * abstraction. The concrete sender is injected through the constructor
  * (Dependency Injection), so it can be swapped without touching this class.
+ *
+ * @author Mateen
  */
 public class NotificationService {
 

@@ -4,6 +4,8 @@ package solid.ocp.good;
  * Concrete discount: reduces the price by a given percentage.
  *
  * Example: 10% discount on $100 -> $90
+ *
+ * @author Mateen
  */
 public class PercentageDiscount implements DiscountStrategy {
 

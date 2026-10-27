@@ -11,6 +11,8 @@ package solid.isp.bad;
  *   - Dummy methods that throw exceptions (a hidden LSP violation too)
  *   - Callers cannot tell from the type what a device really supports
  *   - Adding a method (e.g. email) forces changes in every implementor
+ *
+ * @author Mateen
  */
 interface Machine {
     void print(String doc);

@@ -13,6 +13,8 @@ import java.util.Objects;
  *   - DiscountService depends on the DiscountStrategy INTERFACE, not any concrete class.
  *   - The caller decides WHICH discount to apply by choosing the right implementation.
  *   - Zero if/else, zero switch statements.
+ *
+ * @author Mateen
  */
 public class DiscountService {
 

@@ -6,6 +6,8 @@ import java.util.Objects;
 /**
  * Pure domain model - holds order data only (immutable: items are defensively copied).
  * No logic, no DB, no email. Just data.
+ *
+ * @author Mateen
  */
 public class Order {
 

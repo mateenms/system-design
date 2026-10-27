@@ -8,6 +8,8 @@ package solid.srp.good;
  *   It changes ONLY when Finance team updates pricing or tax logic.
  *
  * Who owns this class? -> Finance / Business team.
+ *
+ * @author Mateen
  */
 public class OrderPricingService {
 

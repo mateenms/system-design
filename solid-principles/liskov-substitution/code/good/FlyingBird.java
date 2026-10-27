@@ -6,6 +6,8 @@ package solid.lsp.good;
  * Key LSP principle:
  *   A method accepting FlyingBird can ALWAYS call fly() safely.
  *   No UnsupportedOperationException possible - the type system enforces it.
+ *
+ * @author Mateen
  */
 public interface FlyingBird extends Bird {
 

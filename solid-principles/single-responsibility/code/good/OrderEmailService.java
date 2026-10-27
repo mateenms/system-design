@@ -8,6 +8,8 @@ package solid.srp.good;
  *   It changes ONLY when the email template or SMTP config changes.
  *
  * Who owns this class? -> Comms / Marketing team.
+ *
+ * @author Mateen
  */
 public class OrderEmailService {
 

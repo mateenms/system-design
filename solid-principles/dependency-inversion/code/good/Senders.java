@@ -7,6 +7,8 @@ import java.util.List;
 /**
  * Low-level details. Each one implements the abstraction.
  * Adding a new channel means adding a new class here, nothing else changes.
+ *
+ * @author Mateen
  */
 public final class Senders {
 

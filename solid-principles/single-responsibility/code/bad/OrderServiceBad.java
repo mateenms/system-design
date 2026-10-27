@@ -18,6 +18,8 @@ package solid.srp.bad;
  * Real pain point:
  *   A bug in the email code can accidentally break the pricing logic
  *   during a refactor, because they live in the same file.
+ *
+ * @author Mateen
  */
 public class OrderServiceBad {
 

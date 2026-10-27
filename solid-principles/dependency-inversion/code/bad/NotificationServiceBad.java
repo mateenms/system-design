@@ -11,6 +11,8 @@ package solid.dip.bad;
  *   - Cannot switch to SMS/push without editing NotificationService
  *   - Cannot unit test without a real email client sending real emails
  *   - The dependency is hidden inside the class
+ *
+ * @author Mateen
  */
 class EmailClient {
     void send(String to, String message) {

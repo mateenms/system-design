@@ -9,6 +9,8 @@ package solid.ocp.good;
  * This is the "open" part of OCP:
  *   - We add new discount types by creating a new class that implements this.
  *   - No existing code is touched.
+ *
+ * @author Mateen
  */
 public interface DiscountStrategy {
 

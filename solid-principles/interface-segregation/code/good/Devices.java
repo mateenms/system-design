@@ -3,6 +3,8 @@ package solid.isp.good;
 /**
  * GOOD EXAMPLE: each device implements only the capabilities it really has.
  * No dummy methods, no UnsupportedOperationException.
+ *
+ * @author Mateen
  */
 public class Devices {
 

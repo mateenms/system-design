@@ -8,6 +8,8 @@ package solid.ocp.good;
  *   - DiscountService, PercentageDiscount, FixedDiscount - all untouched.
  *
  * Example: Seasonal sale gives 25% off -> $100 becomes $75
+ *
+ * @author Mateen
  */
 public class SeasonalDiscount implements DiscountStrategy {
 

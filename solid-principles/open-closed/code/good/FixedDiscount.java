@@ -5,6 +5,8 @@ package solid.ocp.good;
  *
  * Example: $20 off $100 -> $80
  * Price never goes below $0.
+ *
+ * @author Mateen
  */
 public class FixedDiscount implements DiscountStrategy {
 

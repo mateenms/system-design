@@ -6,6 +6,8 @@ package solid.lsp.good;
  * No fly() method, no UnsupportedOperationException.
  * It is impossible to pass an Ostrich where a FlyingBird is required,
  * so the compiler prevents the bug the "bad" version had at runtime.
+ *
+ * @author Mateen
  */
 public class Ostrich implements Bird {
 

@@ -15,6 +15,8 @@ package solid.lsp.bad;
  * Real pain point:
  *   The bug is invisible at compile time. It only crashes at runtime when
  *   makeBirdFly(new Ostrich()) is called.
+ *
+ * @author Mateen
  */
 
 // Base class - assumes ALL birds can fly

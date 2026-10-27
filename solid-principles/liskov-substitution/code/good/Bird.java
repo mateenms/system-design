@@ -6,6 +6,8 @@ package solid.lsp.good;
  * Design decision:
  *   fly() is NOT here because not all birds can fly.
  *   Only capabilities that ALL birds share belong in the base contract.
+ *
+ * @author Mateen
  */
 public interface Bird {
 

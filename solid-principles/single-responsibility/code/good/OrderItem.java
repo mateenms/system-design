@@ -2,6 +2,8 @@ package solid.srp.good;
 
 /**
  * Represents a single line item in an order.
+ *
+ * @author Mateen
  */
 public class OrderItem {
 

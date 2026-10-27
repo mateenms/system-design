@@ -4,6 +4,8 @@ import java.util.List;
 
 /**
  * Demo: every method works correctly with every subtype it accepts.
+ *
+ * @author Mateen
  */
 public class BirdDemo {
 
