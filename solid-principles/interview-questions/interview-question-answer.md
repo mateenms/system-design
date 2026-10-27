@@ -386,7 +386,8 @@ public class NotificationService {
 
     public void send(String type, String message) {
         strategies.stream().filter(s -> s.supports(type)).findFirst()
-            .orElseThrow().send(message);
+            .orElseThrow(() -> new IllegalArgumentException("No strategy for type: " + type))
+            .send(message);
     }
 }
 // Adding SLACK = new @Component class — NotificationService never changes
@@ -409,7 +410,11 @@ public class PaymentProcessor {
     public PaymentProcessor(List<PaymentStrategy> list) {
         this.strategies = list.stream().collect(Collectors.toMap(PaymentStrategy::getType, s -> s));
     }
-    public PaymentResult process(String type, PaymentRequest req) { return strategies.get(type).pay(req); }
+    public PaymentResult process(String type, PaymentRequest req) {
+        PaymentStrategy strategy = strategies.get(type);
+        if (strategy == null) throw new IllegalArgumentException("Unknown payment type: " + type);
+        return strategy.pay(req);
+    }
 }
 ```
 
@@ -1138,6 +1143,13 @@ public class InvoiceService {
         emailSender.send(saved, customerEmail);
         return saved;
     }
+
+    private Invoice toEntity(InvoiceDto dto) {
+        Invoice invoice = new Invoice();
+        invoice.setCustomerId(dto.getCustomerId());
+        invoice.setItems(dto.getItems());
+        return invoice;
+    }
 }
 ```
 
@@ -1170,22 +1182,19 @@ public class BuyOneGetOneFreeDiscount implements DiscountStrategy { // new — n
     public double apply(double price) { return price / 2; }
 }
 
-public class DiscountCalculator {
-    public double calculate(double price, DiscountStrategy strategy) {
-        return strategy.apply(price);
-    }
-}
-
+// OCP payoff: callers apply any strategy directly — no conditional logic anywhere
 // Tests
 @Test
 void percentageDiscountApplied() {
-    DiscountCalculator calc = new DiscountCalculator();
-    assertEquals(90.0, calc.calculate(100.0, new PercentageDiscount(10)));
+    assertEquals(90.0, new PercentageDiscount(10).apply(100.0));
 }
 @Test
 void fixedDiscountApplied() {
-    DiscountCalculator calc = new DiscountCalculator();
-    assertEquals(85.0, calc.calculate(100.0, new FixedDiscount(15)));
+    assertEquals(85.0, new FixedDiscount(15).apply(100.0));
+}
+@Test
+void bogoDiscountApplied() {
+    assertEquals(50.0, new BuyOneGetOneFreeDiscount().apply(100.0));
 }
 ```
 
@@ -1285,14 +1294,17 @@ public class SmsSender implements INotificationSender {
     public void send(String recipient, String message) { gateway.sendText(recipient, message); }
 }
 
-// 3. High-level service depends only on the abstraction
+// 3. High-level service depends only on abstractions
 @Service
 public class NotificationService {
     private final INotificationSender sender;
+    private final IUserContactRepository userRepository;
 
     @Autowired
-    public NotificationService(INotificationSender sender) {
-        this.sender = sender; // injected — can be Email, SMS, or Mock
+    public NotificationService(INotificationSender sender,
+                               IUserContactRepository userRepository) {
+        this.sender         = sender;
+        this.userRepository = userRepository;
     }
 
     public void notifyUser(String userId, String message) {
@@ -1301,12 +1313,19 @@ public class NotificationService {
     }
 }
 
-// 4. Unit test — no real email or SMS needed
+// Supporting abstraction for user contact lookup
+public interface IUserContactRepository {
+    String getContactInfo(String userId);
+}
+
+// 4. Unit test — no real email, SMS, or DB needed
 @Test
 void notifyUser_sendsMessageToCorrectContact() {
     INotificationSender mockSender = Mockito.mock(INotificationSender.class);
-    NotificationService service = new NotificationService(mockSender);
+    IUserContactRepository mockContacts = Mockito.mock(IUserContactRepository.class);
+    when(mockContacts.getContactInfo("user123")).thenReturn("user@example.com");
 
+    NotificationService service = new NotificationService(mockSender, mockContacts);
     service.notifyUser("user123", "Your order is ready");
 
     verify(mockSender).send("user@example.com", "Your order is ready");

@@ -325,7 +325,11 @@ public interface IScannable  { void scan(Document doc); }
 public interface IFaxable    { void fax(Document doc); }
 public interface IEmailable  { void email(Document doc); }
 
-public class BasicPrinter implements IPrintable, IScannable {
+public class BasicPrinter implements IPrintable {
+    @Override public void print(Document doc) { /* ... */ }
+}
+
+public class ScannerPrinter implements IPrintable, IScannable {
     @Override public void print(Document doc) { /* ... */ }
     @Override public void scan(Document doc)  { /* ... */ }
 }
@@ -397,23 +401,23 @@ public class OrderService {
 
 public interface IOrderRepository {
     void save(Order order);
-    Order findById(long id);
+    Optional<Order> findById(long id);
 }
 
 public class MySQLOrderRepository implements IOrderRepository {
-    @Override public void save(Order order)        { /* JDBC/MySQL logic */ }
-    @Override public Order findById(long id)       { /* JDBC/MySQL logic */ return null; }
+    @Override public void save(Order order)               { /* JDBC/MySQL logic */ }
+    @Override public Optional<Order> findById(long id)    { /* JDBC/MySQL logic */ return Optional.empty(); }
 }
 
 public class MongoOrderRepository implements IOrderRepository {
-    @Override public void save(Order order)        { /* MongoDB logic */ }
-    @Override public Order findById(long id)       { /* MongoDB logic */ return null; }
+    @Override public void save(Order order)               { /* MongoDB logic */ }
+    @Override public Optional<Order> findById(long id)    { /* MongoDB logic */ return Optional.empty(); }
 }
 
 public class InMemoryOrderRepository implements IOrderRepository { // for unit tests
     private Map<Long, Order> store = new HashMap<>();
-    @Override public void save(Order order)        { store.put(order.getId(), order); }
-    @Override public Order findById(long id)       { return store.get(id); }
+    @Override public void save(Order order)               { store.put(order.getId(), order); }
+    @Override public Optional<Order> findById(long id)    { return Optional.ofNullable(store.get(id)); }
 }
 
 // High-level module — depends only on the abstraction
@@ -495,12 +499,11 @@ A typical design flow:
 
 ## 11. Interview Questions
 
-See the [interview-questions/](interview-questions/) folder:
+All questions and answers are in one file:
 
-- [Basic](interview-questions/basic.md) — definitions, simple Java examples
-- [Intermediate](interview-questions/intermediate.md) — patterns, trade-offs, Spring, testing
-- [Advanced](interview-questions/advanced.md) — architecture, legacy code, conflicts between principles
-- [Real-World Use Cases](interview-questions/real-world-use-cases.md) — system design scenarios
+→ **[interview-questions/interview-question-answer.md](interview-questions/interview-question-answer.md)**
+
+Covers: Basic · Intermediate (per principle) · Advanced · Real-World Spring Boot Scenarios · Coding Challenges A–E
 
 ---
 
