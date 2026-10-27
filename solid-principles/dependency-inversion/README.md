@@ -2,55 +2,90 @@
 
 > High-level modules should **not depend on low-level modules**. Both should depend on **abstractions**.
 
-Depend on interfaces/abstractions, not concrete implementations. This makes high-level logic swappable and testable.
+Depend on interfaces, not concrete classes. This makes high-level logic swappable and testable.
 
 ## Bad Example
 
-```python
-# bad.py — OrderService is tightly coupled to MySQLDatabase
-class MySQLDatabase:
-    def save(self, data):
-        print(f"Saving to MySQL: {data}")
+```java
+// BAD — OrderService is tightly coupled to MySQLDatabase
+public class MySQLDatabase {
+    public void save(Order order) {
+        // JDBC logic tied to MySQL
+    }
+}
 
-class OrderService:
-    def __init__(self):
-        self.db = MySQLDatabase()   # hard-coded concrete dependency
+public class OrderService {
+    private MySQLDatabase db = new MySQLDatabase(); // hard-coded concrete dependency
 
-    def place_order(self, order):
-        self.db.save(order)
+    public void placeOrder(Order order) {
+        db.save(order);
+    }
+}
 ```
 
-Switching to PostgreSQL or a test double requires modifying `OrderService`.
+Switching to PostgreSQL or MongoDB requires modifying `OrderService`.
 
 ## Good Example
 
-```python
-# good.py — OrderService depends on an abstraction; any storage works
-from abc import ABC, abstractmethod
+```java
+// GOOD — OrderService depends on an abstraction; any storage works
 
-class Database(ABC):
-    @abstractmethod
-    def save(self, data): ...
+public interface IOrderRepository {
+    void save(Order order);
+    Optional<Order> findById(long id);
+}
 
-class MySQLDatabase(Database):
-    def save(self, data):
-        print(f"Saving to MySQL: {data}")
+public class MySQLOrderRepository implements IOrderRepository {
+    @Override public void save(Order order)          { /* JDBC/MySQL */ }
+    @Override public Optional<Order> findById(long id) { return Optional.empty(); }
+}
 
-class InMemoryDatabase(Database):       # swap in for tests, no code change
-    def __init__(self):
-        self.store = []
+public class MongoOrderRepository implements IOrderRepository {
+    @Override public void save(Order order)          { /* MongoDB */ }
+    @Override public Optional<Order> findById(long id) { return Optional.empty(); }
+}
 
-    def save(self, data):
-        self.store.append(data)
+public class InMemoryOrderRepository implements IOrderRepository { // for unit tests
+    private final Map<Long, Order> store = new HashMap<>();
+    @Override public void save(Order order)            { store.put(order.getId(), order); }
+    @Override public Optional<Order> findById(long id) { return Optional.ofNullable(store.get(id)); }
+}
 
-class OrderService:
-    def __init__(self, db: Database):   # dependency injected from outside
-        self.db = db
+public class OrderService {
+    private final IOrderRepository repository;
 
-    def place_order(self, order):
-        self.db.save(order)
+    public OrderService(IOrderRepository repository) { // injected from outside
+        this.repository = repository;
+    }
 
-# Wiring (composition root)
-service = OrderService(MySQLDatabase())
-test_service = OrderService(InMemoryDatabase())
+    public void placeOrder(Order order) {
+        repository.save(order);
+    }
+}
+
+// Spring wiring (composition root)
+@Configuration
+public class AppConfig {
+    @Bean
+    public IOrderRepository orderRepository() { return new MySQLOrderRepository(); }
+
+    @Bean
+    public OrderService orderService(IOrderRepository repo) { return new OrderService(repo); }
+}
 ```
+
+## Dependency Injection vs Dependency Inversion
+
+| Term | Meaning |
+|------|---------|
+| **Dependency Inversion** | Design **principle** — depend on abstractions |
+| **Dependency Injection** | Implementation **technique** — pass dependencies from outside |
+| **IoC Container** | **Tool** that automates injection (Spring, Guice) |
+
+DI is the most common way to achieve DIP, but DIP is the goal; DI is the mechanism.
+
+## Signs You Are Violating DIP
+- `new ConcreteClass()` inside a `@Service` constructor
+- Business logic imports `java.sql.*` directly
+- Changing the DB layer (MySQL → Postgres) touches many service classes
+- Unit tests require a running database

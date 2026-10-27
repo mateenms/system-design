@@ -1,56 +1,67 @@
 # Single Responsibility Principle (SRP)
 
-> A class should have only **one reason to change**.
+> A class should have **one, and only one, reason to change**.
 
-Each class or module should do exactly one thing and own that concern completely.
+Each class or module should do exactly one thing and own that concern completely. "Reason to change" maps to a stakeholder — if Finance, HR, and the DBA can each independently force a class to change, it has three responsibilities.
 
 ## Bad Example
 
-```python
-# bad.py — Order handles business logic AND persistence AND email
-class Order:
-    def __init__(self, items):
-        self.items = items
+```java
+// BAD — three different actors can force this class to change
+public class Employee {
 
-    def calculate_total(self):
-        return sum(item["price"] for item in self.items)
+    // Finance team controls this
+    public double calculatePay() {
+        return baseSalary * 1.2;
+    }
 
-    def save_to_db(self, db):
-        db.execute("INSERT INTO orders ...", self.items)
+    // DBA controls this (schema changes)
+    public void save() {
+        // JDBC logic
+    }
 
-    def send_confirmation_email(self, email_client, address):
-        email_client.send(address, f"Your total is {self.calculate_total()}")
+    // HR team controls this
+    public String generateReport() {
+        return "Employee Report: " + name;
+    }
+}
 ```
-
-Three unrelated reasons to change: pricing logic, database schema, email format.
 
 ## Good Example
 
-```python
-# good.py — each class owns one concern
+```java
+// GOOD — one reason to change per class
 
-class Order:
-    def __init__(self, items):
-        self.items = items
+public class Employee {
+    private String name;
+    private double baseSalary;
+    // getters / setters
+}
 
-    def calculate_total(self):
-        return sum(item["price"] for item in self.items)
+public class PayCalculator {
+    public double calculatePay(Employee employee) {
+        return employee.getBaseSalary() * 1.2;
+    }
+}
 
+public class EmployeeRepository {
+    public void save(Employee employee) {
+        // JDBC logic — only changes when DB schema changes
+    }
+}
 
-class OrderRepository:
-    def __init__(self, db):
-        self.db = db
-
-    def save(self, order):
-        self.db.execute("INSERT INTO orders ...", order.items)
-
-
-class OrderNotifier:
-    def __init__(self, email_client):
-        self.email_client = email_client
-
-    def confirm(self, order, address):
-        self.email_client.send(address, f"Your total is {order.calculate_total()}")
+public class EmployeeReporter {
+    public String generateReport(Employee employee) {
+        return "Employee Report: " + employee.getName();
+    }
+}
 ```
 
-Now each class changes for exactly one reason.
+## Real-World Application
+- **Spring Boot**: `@Service` for business logic, `@Repository` for DB, `@Controller` for HTTP — each has one responsibility
+- **Microservices**: SRP at the service level — each service owns one bounded context
+
+## Signs You Are Violating SRP
+- Class name contains "Manager", "Handler", "Helper", "Util", or "And"
+- Imports from completely unrelated packages (e.g., both `java.sql` and `javax.mail`)
+- Changing a DB column forces you to update email formatting logic

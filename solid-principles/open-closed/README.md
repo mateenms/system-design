@@ -2,44 +2,66 @@
 
 > Software entities should be **open for extension** but **closed for modification**.
 
-Add new behaviour by adding new code, not by changing existing code.
+Add new behaviour by adding new code, not by editing existing, tested code. The mechanism is **polymorphism via interfaces**.
 
 ## Bad Example
 
-```python
-# bad.py — adding a new discount type forces editing this function
-class DiscountCalculator:
-    def calculate(self, order, discount_type):
-        if discount_type == "percentage":
-            return order.total * 0.9
-        elif discount_type == "fixed":
-            return order.total - 10
-        # every new type requires editing here
+```java
+// BAD — every new shape requires editing calculate()
+public class AreaCalculator {
+    public double calculate(String type, double a, double b) {
+        if (type.equals("CIRCLE"))       return Math.PI * a * a;
+        else if (type.equals("RECTANGLE")) return a * b;
+        // adding TRIANGLE requires editing this method
+        return 0;
+    }
+}
 ```
 
 ## Good Example
 
-```python
-# good.py — new discount types extend without touching existing code
-from abc import ABC, abstractmethod
+```java
+// GOOD — new shapes extend without modifying AreaCalculator
 
-class Discount(ABC):
-    @abstractmethod
-    def apply(self, total: float) -> float: ...
+public interface Shape {
+    double area();
+}
 
-class PercentageDiscount(Discount):
-    def apply(self, total):
-        return total * 0.9
+public class Circle implements Shape {
+    private final double radius;
+    public Circle(double r) { this.radius = r; }
+    public double area()    { return Math.PI * radius * radius; }
+}
 
-class FixedDiscount(Discount):
-    def apply(self, total):
-        return total - 10
+public class Rectangle implements Shape {
+    private final double width, height;
+    public Rectangle(double w, double h) { this.width = w; this.height = h; }
+    public double area()                  { return width * height; }
+}
 
-class SeasonalDiscount(Discount):          # new type — no existing code touched
-    def apply(self, total):
-        return total * 0.75
+public class Triangle implements Shape {   // new — zero changes to existing code
+    private final double base, height;
+    public Triangle(double b, double h) { this.base = b; this.height = h; }
+    public double area()                 { return 0.5 * base * height; }
+}
 
-class DiscountCalculator:
-    def calculate(self, order, discount: Discount):
-        return discount.apply(order.total)
+public class AreaCalculator {
+    public double calculate(Shape shape) {
+        return shape.area();               // stable — never changes
+    }
+}
 ```
+
+## Design Patterns That Implement OCP
+
+| Pattern | How |
+|---------|-----|
+| Strategy | Swap algorithms behind a stable interface |
+| Decorator | Add behaviour without changing the decorated class |
+| Template Method | Subclasses fill in steps; skeleton stays fixed |
+| Observer | Add new listeners without touching the publisher |
+
+## Signs You Are Violating OCP
+- Long `if/else if` or `switch` blocks dispatching on a type string or enum
+- Adding a new "type" requires editing 5+ existing files
+- Business logic contains `instanceof` checks
