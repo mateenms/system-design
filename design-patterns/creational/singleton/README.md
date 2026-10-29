@@ -1,78 +1,65 @@
 # Singleton Design Pattern
 
-> Ensure a class has **only one instance** and provide a **global access point** to it.
+> Make sure a class has **only one object**, and give everyone one place to get it.
 
 **Category:** Creational
 
 ## When to use
 
-- Exactly one object must coordinate something shared: application configuration, logger, connection-pool manager, cache.
-- Creating a second instance would be wrong or wasteful.
+When one shared object is enough and a second one would be wrong: app configuration, logger, connection pool, cache.
 
-## Structure
+## How to build one (3 rules)
 
-1. A **private constructor**, so nobody outside can call `new`.
-2. A **private static** field that holds the single instance.
-3. A **public static** `getInstance()` method that returns it.
-4. A **final** class, so it cannot be subclassed into a second type.
+1. Make the constructor **private**, so nobody can call `new`.
+2. Keep the one object in a **private static** field.
+3. Add a **public static `getInstance()`** method that returns it.
 
 ## Code
 
 | File | What it shows |
 |------|---------------|
-| [code/bad/AppConfigBad.java](singleton/code/bad/AppConfigBad.java) | Lazy Singleton without thread safety: 20 threads create 20 "singletons" |
-| [code/good/AppConfig.java](singleton/code/good/AppConfig.java) | Best-practice version using the initialization-on-demand holder idiom |
+| [code/bad/AppConfigBad.java](code/bad/AppConfigBad.java) | No Singleton: `new` gives a different object every time |
+| [code/good/AppConfig.java](code/good/AppConfig.java) | Simplest Singleton (eager): created when the class loads |
+| [code/good/LazyAppConfig.java](code/good/LazyAppConfig.java) | Lazy Singleton: created on first use, safe with threads |
 
-Run from `design-patterns/creational/singleton/code`:
+Run from this folder:
 
 ```bash
-javac -d out bad/*.java good/*.java
+javac -d out code/bad/*.java code/good/*.java
 java -cp out patterns.singleton.bad.AppConfigBad
 java -cp out patterns.singleton.good.AppConfig
+java -cp out patterns.singleton.good.LazyAppConfig
 ```
 
-## Why the good version is correct
+## Eager vs Lazy
 
-| Concern | How it is handled |
-|---------|-------------------|
-| Single instance | Created once inside the `Holder` class |
-| Thread safety | The JVM initialises a class exactly once, safely; no `synchronized` or `volatile` needed |
-| Lazy creation | `Holder` loads only when `getInstance()` is first called |
-| Reflection | Constructor throws if the instance already exists |
-| Shared state | Fields are `final` and immutable, so any thread can read safely |
+| | Eager (`AppConfig`) | Lazy (`LazyAppConfig`) |
+|--|--|--|
+| Created | When the class loads | At first `getInstance()` call |
+| Thread-safe | Yes, automatically | Yes, because of `synchronized` |
+| Best for | Cheap objects you will surely use | Slow objects you may never use |
 
-## Other ways to implement it (know these for interviews)
-
-| Approach | Lazy | Thread-safe | Note |
-|----------|------|-------------|------|
-| Eager (`static final INSTANCE`) | No | Yes | Simplest; fine when creation is cheap |
-| `synchronized getInstance()` | Yes | Yes | Locks on every call, so slower |
-| Double-checked locking | Yes | Yes | Field **must** be `volatile` |
-| Holder idiom (used here) | Yes | Yes | Simple and fast |
-| Enum (`enum X { INSTANCE }`) | No | Yes | Also safe against reflection and serialization; cannot extend a class |
+Other versions you may be asked about: double-checked locking (needs a `volatile` field), the holder idiom, and the enum Singleton (`enum X { INSTANCE }`), which is the safest.
 
 ## Interview questions
 
 **1. What is the Singleton pattern?**
-A creational pattern that guarantees one instance of a class and a global access point to it.
+A class that allows only one object and gives a global way to get it.
 
-**2. How do you make it thread-safe?**
-Use eager initialisation, the holder idiom, an enum, or double-checked locking with a `volatile` field. A plain lazy `if (instance == null)` is not safe.
+**2. How do you create one?**
+Private constructor, private static instance, public static `getInstance()`.
 
-**3. Why must the field be `volatile` in double-checked locking?**
-Without it, the compiler or CPU may reorder the writes so another thread sees a non-null reference to an object that is not fully constructed.
+**3. What is the difference between eager and lazy?**
+Eager creates the object when the class loads. Lazy creates it the first time someone asks for it.
 
-**4. How can a Singleton be broken?**
-Reflection (`setAccessible(true)` on the constructor), serialization (deserializing creates a new object; fix with `readResolve()`), cloning (do not implement `Cloneable`), and multiple class loaders. An enum Singleton resists the first three.
+**4. Is a lazy Singleton thread-safe?**
+Not by default. Two threads can both see `null` and create two objects. Fix it with `synchronized`, double-checked locking, the holder idiom, or an enum.
 
-**5. Why is the enum approach recommended?**
-The JVM guarantees one instance and blocks reflection and serialization attacks. Limitation: an enum cannot extend another class.
+**5. How can a Singleton be broken?**
+Reflection, serialization, and cloning can all create a second object. An enum Singleton protects against all three.
 
-**6. What are the drawbacks of Singleton?**
-It is global state in disguise, which hides dependencies and makes unit testing harder because it cannot be easily replaced by a mock. It also gives the class two jobs (its own logic plus controlling its lifecycle), which strains the Single Responsibility Principle.
+**6. What are the drawbacks?**
+It is global state, so it hides dependencies and makes unit tests harder because you cannot easily swap it for a mock.
 
-**7. How does this relate to Spring?**
-Spring beans are singleton-scoped by default, but the container manages them and injects them through constructors. You get one shared instance without a static `getInstance()`, and tests can still swap in a mock. This is the preferred approach in Spring applications (see Dependency Inversion in [solid-principles](../../../solid-principles/)).
-
-**8. Is a Singleton one instance per JVM?**
-One per class loader, not strictly one per JVM. It is also per process, so it is not shared across multiple servers.
+**7. How does Spring handle this?**
+Spring beans are singletons by default. Spring creates one object and injects it where needed, so you do not write `getInstance()` yourself and tests can still use a mock.
