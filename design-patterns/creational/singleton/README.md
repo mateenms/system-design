@@ -19,27 +19,32 @@ When one shared object is enough and a second one would be wrong: app configurat
 | File | What it shows |
 |------|---------------|
 | [code/bad/AppConfigBad.java](code/bad/AppConfigBad.java) | No Singleton: `new` gives a different object every time |
-| [code/good/AppConfig.java](code/good/AppConfig.java) | Simplest Singleton (eager): created when the class loads |
-| [code/good/LazyAppConfig.java](code/good/LazyAppConfig.java) | Lazy Singleton: created on first use, safe with threads |
+| [code/good/EagerSingleton.java](code/good/EagerSingleton.java) | Created when the class loads |
+| [code/good/LazySingleton.java](code/good/LazySingleton.java) | Created on first use, `synchronized` |
+| [code/good/DoubleCheckedLockingSingleton.java](code/good/DoubleCheckedLockingSingleton.java) | Lazy, locks only until created, needs `volatile` |
+| [code/good/BillPughSingleton.java](code/good/BillPughSingleton.java) | Lazy and thread-safe with an inner holder class |
+| [code/good/EnumSingleton.java](code/good/EnumSingleton.java) | Safest: protected from reflection and serialization |
+| [code/good/SingletonDemo.java](code/good/SingletonDemo.java) | Runs all five and checks they return the same object |
 
 Run from this folder:
 
 ```bash
 javac -d out code/bad/*.java code/good/*.java
 java -cp out patterns.singleton.bad.AppConfigBad
-java -cp out patterns.singleton.good.AppConfig
-java -cp out patterns.singleton.good.LazyAppConfig
+java -cp out patterns.singleton.good.SingletonDemo
 ```
 
-## Eager vs Lazy
+## Which one should I use?
 
-| | Eager (`AppConfig`) | Lazy (`LazyAppConfig`) |
-|--|--|--|
-| Created | When the class loads | At first `getInstance()` call |
-| Thread-safe | Yes, automatically | Yes, because of `synchronized` |
-| Best for | Cheap objects you will surely use | Slow objects you may never use |
+| Approach | Lazy | Thread-safe | Reflection / serialization safe | Complexity |
+|----------|:----:|:-----------:|:-------------------------------:|------------|
+| Eager | No | Yes | No | Very simple |
+| Lazy (`synchronized`) | Yes | Yes | No | Simple, a bit slower |
+| Double-checked locking | Yes | Yes (needs `volatile`) | No | Easy to get wrong |
+| Bill Pugh (holder) | Yes | Yes | No | Simple |
+| Enum | No | Yes | Yes | Simplest |
 
-Other versions you may be asked about: double-checked locking (needs a `volatile` field), the holder idiom, and the enum Singleton (`enum X { INSTANCE }`), which is the safest.
+**Rule of thumb:** use **Enum** by default. Use **Bill Pugh** if you need lazy creation or must extend a class. Use **Eager** when the object is cheap. In Spring, let the container manage a singleton bean instead.
 
 ## Interview questions
 
