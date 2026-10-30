@@ -21,9 +21,10 @@ When one shared object is enough and a second one would be wrong: app configurat
 | [code/bad/AppConfigBad.java](code/bad/AppConfigBad.java) | No Singleton: `new` gives a different object every time |
 | [code/good/EagerSingleton.java](code/good/EagerSingleton.java) | Created when the class loads |
 | [code/good/LazySingleton.java](code/good/LazySingleton.java) | Created on first use, `synchronized` |
+| [code/good/DoubleCheckedLockingSingleton.java](code/good/DoubleCheckedLockingSingleton.java) | Lazy, no lock once created, needs `volatile` |
 | [code/good/BillPughSingleton.java](code/good/BillPughSingleton.java) | Lazy and thread-safe with an inner holder class |
 | [code/good/EnumSingleton.java](code/good/EnumSingleton.java) | Safest: protected from reflection and serialization |
-| [code/good/SingletonDemo.java](code/good/SingletonDemo.java) | Runs all four and checks they return the same object |
+| [code/good/SingletonDemo.java](code/good/SingletonDemo.java) | Runs all five and checks they return the same object |
 
 Run from this folder:
 
@@ -39,6 +40,7 @@ java -cp out patterns.singleton.good.SingletonDemo
 |----------|:----:|:-----------:|:-------------------------------:|------------|
 | Eager | No | Yes | No | Very simple |
 | Lazy (`synchronized`) | Yes | Yes | No | Simple, a bit slower |
+| Double-checked locking | Yes | Yes (needs `volatile`) | No | Easy to get wrong |
 | Bill Pugh (holder) | Yes | Yes | No | Simple |
 | Enum | No | Yes | Yes | Simplest |
 
