@@ -15,5 +15,7 @@ public class SingletonDemo {
         System.out.println("Enum                : " + (EnumSingleton.INSTANCE == EnumSingleton.INSTANCE));
 
         System.out.println("App name: " + EnumSingleton.INSTANCE.getAppName());
+
+       System.out.println(  LazySingleton.getInstance()==LazySingleton.getInstance());
     }
 }
