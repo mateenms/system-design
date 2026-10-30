@@ -28,6 +28,8 @@ When a class has many fields and some are optional: a student with name, age, co
 | [src/patterns/builder/pizza/PizzaDemo.java](src/patterns/builder/pizza/PizzaDemo.java) | Runs the Pizza builder |
 | [src/patterns/builder/email/Email.java](src/patterns/builder/email/Email.java) | Example 3: required `to` and `subject`, optional `cc` and `body` |
 | [src/patterns/builder/email/EmailDemo.java](src/patterns/builder/email/EmailDemo.java) | Runs the Email builder |
+| [src/patterns/builder/employee/Employee.java](src/patterns/builder/employee/Employee.java) | Example 4: required `employeeId` and `name`, optional `email` and `age` |
+| [src/patterns/builder/employee/EmployeeDemo.java](src/patterns/builder/employee/EmployeeDemo.java) | Runs the Employee builder |
 
 Run from this folder:
 
@@ -37,6 +39,7 @@ java -cp out patterns.builder.student.bad.StudentBad
 java -cp out patterns.builder.student.good.StudentDemo
 java -cp out patterns.builder.pizza.PizzaDemo
 java -cp out patterns.builder.email.EmailDemo
+java -cp out patterns.builder.employee.EmployeeDemo
 ```
 
 ## Bad vs good
