@@ -1,18 +1,18 @@
-package patterns.builder.good;
+package patterns.builder.student.good;
 
 /**
  * GOOD: Builder pattern.
  *
- * Student is immutable. The only way to create one is through Student.Builder,
- * so every call reads like a sentence and the order of the values does not matter.
+ * A Student cannot change after it is created. The only way to make one is
+ * Student.Builder, so every value has a name and the order does not matter.
  *
- * Steps to write a Builder:
- *   Step 1: make the class final, with final fields (no setters)
- *   Step 2: make the constructor private and let it take the Builder
- *   Step 3: add a static nested Builder class with the same fields
- *   Step 4: put the required fields in the Builder constructor
- *   Step 5: add one method per optional field that returns "this"
- *   Step 6: add build(): validate, then create the object
+ * Steps to write a Builder (same numbers in the code below):
+ *   1. final class, final fields, no setters
+ *   2. private constructor that takes the Builder
+ *   3. static nested Builder with the same fields
+ *   4. required fields go in the Builder constructor
+ *   5. one method per optional field, each returns "this"
+ *   6. build() checks the values, then creates the object
  *
  * @author Mateen
  */
@@ -21,13 +21,12 @@ public final class Student {
     // Step 1: final fields, no setters
     private final int rollNo;      // required
     private final String name;     // required
-    private final int age;         // optional (0 means "not given")
+    private final int age;         // optional, 0 means "not given"
     private final String course;   // optional
     private final String city;     // optional
 
-    // Step 2: private constructor. Nobody can call new Student(...), they must use the Builder.
-    // Tip: if you add a mutable field (like a List), copy it here, e.g. List.copyOf(builder.subjects),
-    // so the Student never shares it with the Builder.
+    // Step 2: private constructor, so only the Builder can create a Student
+    // (a List field would be copied here with List.copyOf(...), see Pizza)
     private Student(Builder builder) {
         this.rollNo = builder.rollNo;
         this.name = builder.name;
@@ -48,7 +47,7 @@ public final class Student {
                 + ", course=" + course + ", city=" + city + "}";
     }
 
-    // Step 3: static nested Builder with the same fields
+    // Step 3: nested Builder
     public static class Builder {
 
         private final int rollNo;
@@ -57,13 +56,13 @@ public final class Student {
         private String course;
         private String city;
 
-        // Step 4: required fields go in the Builder constructor
+        // Step 4: required fields
         public Builder(int rollNo, String name) {
             this.rollNo = rollNo;
             this.name = name;
         }
 
-        // Step 5: optional fields. Set a value and return "this" so calls can be chained
+        // Step 5: optional fields, "return this" lets you chain the calls
         public Builder age(int age) {
             this.age = age;
             return this;
@@ -79,23 +78,23 @@ public final class Student {
             return this;
         }
 
-        // Step 6: validate everything once, then create the Student
+        // Step 6: check the values, then create the Student
         public Student build() {
             if (rollNo <= 0) {
-                throw new IllegalStateException("rollNo must be positive");
+                throw new IllegalArgumentException("rollNo must be positive");
             }
             if (name == null || name.isBlank()) {
-                throw new IllegalStateException("name is required");
+                throw new IllegalArgumentException("name is required");
             }
             if (age < 0) {
-                throw new IllegalStateException("age cannot be negative");
+                throw new IllegalArgumentException("age cannot be negative");
             }
-            // optional text fields: either not given (null) or a real value, never blank
+            // optional text: null (not given) or a real value, never blank
             if (course != null && course.isBlank()) {
-                throw new IllegalStateException("course cannot be blank");
+                throw new IllegalArgumentException("course cannot be blank");
             }
             if (city != null && city.isBlank()) {
-                throw new IllegalStateException("city cannot be blank");
+                throw new IllegalArgumentException("city cannot be blank");
             }
             return new Student(this);
         }

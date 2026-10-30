@@ -1,12 +1,12 @@
-package patterns.builder.bad;
+package patterns.builder.student.bad;
 
 /**
  * BAD: no Builder (the "telescoping constructor" problem).
  *
- * Every combination of fields needs its own constructor, and a call like
+ * Every mix of fields needs its own constructor, and a call like
  * new StudentBad(1, "Asha", 20, "Java", "Pune") is hard to read:
- * which value is the course? which one is the city? Swap two Strings and
- * the compiler will not warn you (see main below).
+ * which String is the course and which is the city?
+ * If you swap them, the compiler does not warn you (see main below).
  *
  * @author Mateen
  */
@@ -45,8 +45,8 @@ public class StudentBad {
     }
 
     public static void main(String[] args) {
-        // Mistake on purpose: the order is (course, city), but city and course are swapped here.
+        // Mistake on purpose: the order is (course, city), but they are swapped here
         StudentBad student = new StudentBad(1, "Asha", 20, "Pune", "Java");
-        System.out.println(student); // prints course=Pune, city=Java and nobody notices
+        System.out.println(student); // course=Pune, city=Java, and nobody notices
     }
 }

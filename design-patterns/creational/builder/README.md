@@ -8,27 +8,35 @@
 
 When a class has many fields and some are optional: a student with name, age, course, city. Without a Builder you end up with many constructors that are easy to mix up.
 
-## How to build one (4 rules)
+## How to build one (6 steps)
 
-1. Make the class **immutable**: `final` fields, no setters.
-2. Make its constructor **private**, taking the Builder.
-3. Add a **static nested `Builder`** class. Put the required fields in its constructor.
-4. Give the Builder one method per optional field that **returns `this`**, plus a `build()` method that validates and creates the object.
+1. Make the class `final`, with `final` fields and no setters.
+2. Make its constructor `private`, taking the Builder.
+3. Add a **static nested `Builder`** class with the same fields.
+4. Put the required fields in the Builder constructor.
+5. Add one method per optional field that **returns `this`**.
+6. Add `build()`: check the values, then create the object.
 
 ## Code
 
 | File | What it shows |
 |------|---------------|
-| [src/patterns/builder/bad/StudentBad.java](src/patterns/builder/bad/StudentBad.java) | No Builder: many constructors, easy to swap two `String` values |
-| [src/patterns/builder/good/Student.java](src/patterns/builder/good/Student.java) | `Student` with a nested `Builder` |
-| [src/patterns/builder/good/BuilderDemo.java](src/patterns/builder/good/BuilderDemo.java) | Creates students with the Builder |
+| [src/patterns/builder/student/bad/StudentBad.java](src/patterns/builder/student/bad/StudentBad.java) | No Builder: many constructors, easy to swap two `String` values |
+| [src/patterns/builder/student/good/Student.java](src/patterns/builder/student/good/Student.java) | `Student` with a nested `Builder` |
+| [src/patterns/builder/student/good/StudentDemo.java](src/patterns/builder/student/good/StudentDemo.java) | Creates students with the Builder |
+| [src/patterns/builder/pizza/Pizza.java](src/patterns/builder/pizza/Pizza.java) | Example 2: required size, optional cheese, a list of toppings |
+| [src/patterns/builder/pizza/PizzaDemo.java](src/patterns/builder/pizza/PizzaDemo.java) | Runs the Pizza builder |
+| [src/patterns/builder/email/Email.java](src/patterns/builder/email/Email.java) | Example 3: required `to` and `subject`, optional `cc` and `body` |
+| [src/patterns/builder/email/EmailDemo.java](src/patterns/builder/email/EmailDemo.java) | Runs the Email builder |
 
 Run from this folder:
 
 ```bash
-javac -d out src/patterns/builder/*/*.java
-java -cp out patterns.builder.bad.StudentBad
-java -cp out patterns.builder.good.BuilderDemo
+javac -d out $(find src -name "*.java")
+java -cp out patterns.builder.student.bad.StudentBad
+java -cp out patterns.builder.student.good.StudentDemo
+java -cp out patterns.builder.pizza.PizzaDemo
+java -cp out patterns.builder.email.EmailDemo
 ```
 
 ## Bad vs good
@@ -48,7 +56,8 @@ new Student.Builder(1, "Asha")
 ## Good to know
 
 - `age` is an `int`, so `0` means "not given". Use `Integer` or `Optional` if you must tell `0` apart from "missing".
-- If you add a mutable field (like a `List`), copy it in the `Student` constructor so the Student and the Builder never share it.
+- A mutable field (like a `List`) must be copied in the constructor so the object and the Builder never share it. [Pizza.java](src/patterns/builder/pizza/Pizza.java) does this with `List.copyOf(...)`.
+- `build()` throws `IllegalArgumentException` when a value is invalid.
 
 ## Interview questions
 
