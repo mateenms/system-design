@@ -9,3 +9,4 @@ Patterns that abstract and control how objects are created.
 | Abstract Factory | Create families of related objects without naming concrete classes |
 | [Builder](builder/) | Construct complex objects step by step |
 | [Prototype](prototype/) | Create new objects by copying an existing one |
+| [Prototype Registry](registry/) | Keep ready-made prototypes by name and hand out copies |
