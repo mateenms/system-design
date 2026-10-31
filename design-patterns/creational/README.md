@@ -8,4 +8,4 @@ Patterns that abstract and control how objects are created.
 | Factory Method | Let subclasses decide which class to instantiate |
 | Abstract Factory | Create families of related objects without naming concrete classes |
 | [Builder](builder/) | Construct complex objects step by step |
-| Prototype | Create new objects by copying an existing one |
+| [Prototype](prototype/) | Create new objects by copying an existing one |
